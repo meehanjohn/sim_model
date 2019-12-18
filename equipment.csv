@@ -1,6 +1,6 @@
 ﻿facility,rmi_drums,pfi_drums,pfo_tanks,pi_drums,bagging_machines,boxing_machines
-"Detroit, MI",40,15,2,8,1,1
-"Columbus, OH",30,32,3,10,2,1
-"Springfield, MO",50,24,1,15,1,1
-"Green Bay, WI",20,17,2,17,1,1
-"Omaha, NE",30,28,3,12,1,1
+DETROITMI,40,15,2,8,1,1
+COLUMBUSOH,30,32,3,10,2,1
+SPRINGFIELDMO,50,24,1,15,1,1
+GREENBAYWI,20,17,2,17,1,1
+OMAHANE,30,28,3,12,1,1
