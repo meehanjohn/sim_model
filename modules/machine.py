@@ -78,7 +78,7 @@ class machine:
 
     def process(self, amount, **kwargs):
         if self.type == 'classifier':
-            split = pd.read_csv('classifier_split.csv')
+            split = pd.read_csv('files/classifier_split.csv')
             split = split[split['Color'] == self.jb_color]
             split['Queue'] = split.apply(
                 lambda x: int(amount*x.Percentage/100),

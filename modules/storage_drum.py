@@ -8,10 +8,10 @@ class storage_drum:
         self.jb_size = kwargs.get('jb_size')
         self.jb_flavor = kwargs.get('jb_flavor')
 
-        if self.contents:
-            self.is_empty = False
-        else:
+        if self.contents is None or self.contents == 0:
             self.is_empty = True
+        else:
+            self.is_empty = False
 
     def __repr__(self):
-        return(self.id)
+        return(str(self.id))
