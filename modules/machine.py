@@ -7,14 +7,27 @@ class machine:
         self.type = type
         self.id = type+str(i)
         self.facility = kwargs.get('facility')
-        self.available = True
-        self.queue = None
+        self.queue = pd.DataFrame(
+            {
+            'Color':None,
+            'Size':None,
+            'Flavor':None,
+            'Rem':0
+            },
+            index=[1]
+        )
 
     def __repr__(self):
         return(self.id)
 
-    def get_rate(self, **kwargs):
+    @property
+    def available(self):
+        if (self.queue.Rem == 0).all():
+            return True
+        else:
+            return False
 
+    def get_rate(self, **kwargs):
         def fixed_rate(filename, facility):
             rates = pd.read_csv('files/classifier_rate.csv')
             rate = int(rates[rates['Site'] == facility]['Processing_Rate'])
@@ -70,7 +83,6 @@ class machine:
 
 
     def load(self, **kwargs):
-        self.available = False
         self.jb_color = kwargs.get('jb_color')
         self.jb_size = kwargs.get('jb_size')
         self.jb_flavor = kwargs.get('jb_flavor')
@@ -80,7 +92,7 @@ class machine:
         if self.type == 'classifier':
             split = pd.read_csv('files/classifier_split.csv')
             split = split[split['Color'] == self.jb_color]
-            split['Queue'] = split.apply(
+            split['Rem'] = split.apply(
                 lambda x: int(amount*x.Percentage/100),
                 axis=1
             )
@@ -92,7 +104,7 @@ class machine:
                 'Color':self.jb_color,
                 'Size':self.jb_size,
                 'Flavor':self.jb_flavor,
-                'Queue':amount
+                'Rem':amount
                 },
                 index=[1]
             )
@@ -106,9 +118,12 @@ class machine:
         process_time = amount/rate
         return(process_time)
 
-    def empty(self):
-        if (self.queue['Queue'] == 0).all():
-            self.available = True
-            return(self.queue)
-        else:
-            return(self.queue)
+    def unload(self, amount):
+        out = self.queue.copy()
+        out.Rem = out.Rem.apply(
+            lambda x: min(x, amount)
+        )
+        self.queue.Rem = self.queue.Rem.apply(
+            lambda x: max(0, x-amount)
+        )
+        return(out)

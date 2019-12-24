@@ -41,27 +41,37 @@ class storage_cell:
         ]
 
         self.drums = drums
-        self.empty_drums = [drum for drum in drums if drum.is_empty == True]
-        self.full_drums = [drum for drum in drums if drum not in self.empty_drums]
+
+    @property
+    def empty_drums(self):
+        return [drum for drum in self.drums if drum.is_empty == True]
+
+    @property
+    def full_drums(self):
+        return [drum for drum in self.drums if drum not in self.empty_drums]
 
     def order_drums(self):
         pass
 
     def fill_drums(self, queue):
-        if len(queue) > len(self.empty_drums):
-            print('Not enough drums')
-        else:
+        if len(queue) <= len(self.empty_drums):
             for index, row in queue.iterrows():
-                drum = self.empty_drums.pop()
-                drum.contents = row.Queue
-                drum.jb_color = row.Color
+                drum = self.empty_drums[0]
                 if 'Size' in queue.columns:
-                    drum.jb_size = row.Size
+                    jb_size = row.Size
+                else:
+                    jb_size = None
                 if 'Flavor' in queue.columns:
-                    drum.flavor = row.Flavor
-                drum.is_empty = False
-                self.full_drums.append(drum)
+                    jb_flavor = row.Flavor
+                else:
+                    jb_flavor = None
 
-
-    def empty_drums(self):
-        pass
+                drum.fill(
+                    #time=time,
+                    amount=row.Rem,
+                    jb_color=row.Color,
+                    jb_size=jb_size,
+                    jb_flavor=jb_flavor
+                )
+        else:
+            print('Not enough drums')

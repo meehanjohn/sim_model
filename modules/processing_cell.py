@@ -33,9 +33,6 @@ class processing_cell:
         for m in self.machines:
             if m.available:
                 raise Exception('Machine is already empty.')
-
             else:
-                queue = m.empty()
-                queue.Queue = queue.Queue - amount
-                m.queue = queue
-                return(queue)
+                out = m.unload(amount)
+                return(out)
