@@ -42,13 +42,13 @@ class storage_cell:
     def order_drums(self):
         pass
 
-    def load_drums(self, queue):
+    def load_drums(self, queue, time):
         queue_kwargs_list = queue.to_dict('records')
 
         if len(queue_kwargs_list) <= len(self.empty_drums):
             for queue_kwargs in queue_kwargs_list:
                 drum = self.empty_drums[0]
-                drum.load(**queue_kwargs)
+                drum.load(time=time, **queue_kwargs)
         else:
             print('Not enough drums')
 

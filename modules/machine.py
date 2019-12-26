@@ -40,17 +40,18 @@ class machine:
             package_type = kwargs.get('package_type')
             hist_rate = pd.read_csv(filename)
 
-            if jb_flavor:
+            if 'Flavor' in hist_rate.columns:
                 diff_var = 'Flavor'
-            elif package_type:
-                diff_var = 'Packaging_Type'
+                diff_val = jb_flavor
             else:
-                raise KeyError('Not enough arguments supplied to look up rate')
-
+                diff_var = 'Packaging_Type'
+                diff_val = package_type
+            ## TODO: figure out how to mask dataframe on
+            ## either flavor OR package type
             mask = (
                 (hist_rate.Site == facility)
                 & (hist_rate.Size == jb_size)
-                & (hist_rate[diff_var] == (jb_flavor or package_type))
+                & (hist_rate[diff_var] == diff_val)
             )
 
             hist_rate = hist_rate[mask]['Processing_Rate']
@@ -62,6 +63,7 @@ class machine:
             # Simulate processing rate using random variable
             # Following sample normal distribution
             rate = s_sd*stats.norm.ppf(np.random.random())+s_mean
+            # Rate units are pounds/hour
             return(rate)
 
         if self.type == 'classifier':
@@ -116,6 +118,7 @@ class machine:
             package_type = self.package_type
         )
         process_time = amount/rate
+        # Process time in hours
         return(process_time)
 
     def unload(self, amount):

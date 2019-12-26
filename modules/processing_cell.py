@@ -34,7 +34,8 @@ class processing_cell:
     def load_machines(self, **kwargs):
         for m in self.avail_mach:
             m.load(**kwargs)
-            m.process(**kwargs)
+            process_time = m.process(**kwargs)
+            return(process_time)
 
     def unload_machines(self, amount):
         for m in self.unavail_mach:
