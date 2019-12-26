@@ -23,16 +23,19 @@ class processing_cell:
     def __repr__(self):
         return("{0} Processing Cell".format(self.type))
 
-    def load_machines(self, amount, **kwargs):
-        for m in self.machines:
-            if m.available:
-                m.load(**kwargs)
-                m.process(amount, **kwargs)
+    @property
+    def avail_mach(self):
+        return [m for m in self.machines if m.available == True]
 
-    def empty_machines(self, amount):
-        for m in self.machines:
-            if m.available:
-                raise Exception('Machine is already empty.')
-            else:
-                out = m.unload(amount)
-                return(out)
+    @property
+    def unavail_mach(self):
+        return [m for m in self.machines if m.available == False]
+
+    def load_machines(self, **kwargs):
+        for m in self.avail_mach:
+            m.load(**kwargs)
+            m.process(**kwargs)
+
+    def unload_machines(self, amount):
+        for m in self.unavail_mach:
+            yield m.unload(amount)

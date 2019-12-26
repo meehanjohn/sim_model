@@ -9,10 +9,10 @@ class machine:
         self.facility = kwargs.get('facility')
         self.queue = pd.DataFrame(
             {
-            'Color':None,
-            'Size':None,
-            'Flavor':None,
-            'Rem':0
+            'jb_color':None,
+            'jb_size':None,
+            'jb_flavor':None,
+            'amount':0
             },
             index=[1]
         )
@@ -22,7 +22,7 @@ class machine:
 
     @property
     def available(self):
-        if (self.queue.Rem == 0).all():
+        if (self.queue.amount == 0).all():
             return True
         else:
             return False
@@ -91,20 +91,20 @@ class machine:
     def process(self, amount, **kwargs):
         if self.type == 'classifier':
             split = pd.read_csv('files/classifier_split.csv')
-            split = split[split['Color'] == self.jb_color]
-            split['Rem'] = split.apply(
-                lambda x: int(amount*x.Percentage/100),
+            split = split[split.jb_color == self.jb_color]
+            split['amount'] = split.apply(
+                lambda x: int(amount*x.percentage/100),
                 axis=1
             )
-            self.queue = split
+            self.queue = split[['jb_color', 'jb_size', 'percentage', 'amount']]
 
         else:
             self.queue = pd.DataFrame(
                 {
-                'Color':self.jb_color,
-                'Size':self.jb_size,
-                'Flavor':self.jb_flavor,
-                'Rem':amount
+                'jb_color':self.jb_color,
+                'jb_size':self.jb_size,
+                'jb_flavor':self.jb_flavor,
+                'amount':amount
                 },
                 index=[1]
             )
@@ -120,10 +120,10 @@ class machine:
 
     def unload(self, amount):
         out = self.queue.copy()
-        out.Rem = out.Rem.apply(
+        out.amount = out.amount.apply(
             lambda x: min(x, amount)
         )
-        self.queue.Rem = self.queue.Rem.apply(
+        self.queue.amount = self.queue.amount.apply(
             lambda x: max(0, x-amount)
         )
         return(out)

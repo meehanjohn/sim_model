@@ -1,4 +1,4 @@
-Site,Drum Number,Capacity
+facility,id,capacity
 DETROITMI,FI Drum 1,"20,000"
 DETROITMI,FI Drum 2,"20,000"
 DETROITMI,FI Drum 3,"20,000"

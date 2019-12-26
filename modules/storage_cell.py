@@ -6,12 +6,12 @@ class storage_cell:
         self.type = type
         self.num_drums = kwargs.get('num_drums')
         self.facility = kwargs.get('facility')
-        self.init_drums(**kwargs)
+        self.init_drums()
 
     def __repr__(self):
         return("{0} Storage Cell".format(self.type))
 
-    def init_drums(self, **kwargs):
+    def init_drums(self):
         if self.type == 'rmi':
             filename = 'files/rmi_inventory_level.csv'
 
@@ -22,22 +22,11 @@ class storage_cell:
             filename = 'files/pi_drum.csv'
 
         drum_df = pd.read_csv(filename, thousands=',')
-        drum_df = drum_df[drum_df['Site'] == self.facility]
-
-        if 'Start Amount' not in drum_df.columns:
-            drum_df['Start Amount'] = None
-        if 'Color' not in drum_df.columns:
-            drum_df['Color'] = None
-
+        drum_df = drum_df[drum_df.facility == self.facility]
+        drum_kwargs_list = drum_df.to_dict('records')
         drums = [
-            storage_drum(
-                type,
-                id=row['Drum Number'],
-                capacity=row['Capacity'],
-                contents=row['Start Amount'],
-                jb_color=row['Color']
-            )
-            for index, row in drum_df.iterrows()
+            storage_drum(type, **drum_kwargs)
+            for drum_kwargs in drum_kwargs_list
         ]
 
         self.drums = drums
@@ -53,25 +42,16 @@ class storage_cell:
     def order_drums(self):
         pass
 
-    def fill_drums(self, queue):
-        if len(queue) <= len(self.empty_drums):
-            for index, row in queue.iterrows():
-                drum = self.empty_drums[0]
-                if 'Size' in queue.columns:
-                    jb_size = row.Size
-                else:
-                    jb_size = None
-                if 'Flavor' in queue.columns:
-                    jb_flavor = row.Flavor
-                else:
-                    jb_flavor = None
+    def load_drums(self, queue):
+        queue_kwargs_list = queue.to_dict('records')
 
-                drum.fill(
-                    #time=time,
-                    amount=row.Rem,
-                    jb_color=row.Color,
-                    jb_size=jb_size,
-                    jb_flavor=jb_flavor
-                )
+        if len(queue_kwargs_list) <= len(self.empty_drums):
+            for queue_kwargs in queue_kwargs_list:
+                drum = self.empty_drums[0]
+                drum.load(**queue_kwargs)
         else:
             print('Not enough drums')
+
+    def unload_drums(self):
+        for drum in self.full_drums:
+            yield drum.unload()

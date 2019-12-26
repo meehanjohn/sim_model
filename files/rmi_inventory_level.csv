@@ -1,4 +1,4 @@
-Site,Drum Number,Color,Start Amount,Capacity
+facility,id,jb_color,contents,capacity
 DETROITMI,RMI DRUM1,Coloring Agent21,300000,"300,000"
 DETROITMI,RMI DRUM2,Coloring Agent19,300000,"300,000"
 DETROITMI,RMI DRUM3,Coloring Agent16,300000,"300,000"
