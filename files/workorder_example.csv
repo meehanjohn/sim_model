@@ -1,4 +1,4 @@
-Plant Id,Internal Work Order Id,Color,Size,Flavor,Packaging Type,Qty
+facility,id,jb_color,jb_size,jb_flavor,packaging_type,qty
 COLUMBUSOH,21092019,Coloring agent1,S1,F12,Bag,2000
 COLUMBUSOH,21092019,Coloring agent25,S1,F6,Bag,2100
 COLUMBUSOH,21092019,Coloring agent10,S5,F2,Bag,1700

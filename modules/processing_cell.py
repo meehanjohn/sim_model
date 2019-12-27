@@ -7,11 +7,11 @@ class processing_cell:
 
         if type == 'packaging':
             self.num_machines = {
-                'boxing_machines':kwargs.get('boxing_machines'),
-                'bagging_machines':kwargs.get('bagging_machines')
+                'boxing_machine':kwargs.get('boxing_machines'),
+                'bagging_machine':kwargs.get('bagging_machines')
             }
             self.machines = [
-                machine(type, i=1, **dict(key=value), **kwargs)
+                machine(type=key, i=1, **dict(key=value), **kwargs)
                 for key,value in self.num_machines.items()
             ]
         else:
@@ -34,8 +34,7 @@ class processing_cell:
     def load_machines(self, **kwargs):
         for m in self.avail_mach:
             m.load(**kwargs)
-            process_time = m.process(**kwargs)
-            return(process_time)
+            return(m.process(**kwargs))
 
     def unload_machines(self, amount):
         for m in self.unavail_mach:

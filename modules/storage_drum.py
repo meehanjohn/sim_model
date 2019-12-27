@@ -8,13 +8,15 @@ class storage_drum:
         self.jb_size = kwargs.get('jb_size')
         self.jb_flavor = kwargs.get('jb_flavor')
 
+        '''
         if type in ['pfi', 'pi']:
             self.load_times = []
             self.unload_times = []
         else:
             self.load_time = kwargs.get('time')
             self.unload_time = kwargs.get('time')
-
+        '''
+        
     def __repr__(self):
         return(str(self.id))
 
@@ -28,27 +30,33 @@ class storage_drum:
     def load(self, **kwargs):
         amount = kwargs.get('amount')
         if amount <= self.capacity:
+            '''
             time = kwargs.get('time')
             if type in ['pfi', 'pi']:
                 self.load_times.append(time)
             else:
                 self.load_time = time
+            '''
             self.contents = amount
             self.jb_color = kwargs.get('jb_color')
             self.jb_size = kwargs.get('jb_size')
             self.jb_flavor = kwargs.get('jb_flavor')
+            return(self.id)
         else:
             raise ValueError('Amount exceeds capacity')
 
     def unload(self, **kwargs):
         time = kwargs.get('time')
+        '''
         if type in ['pfi', 'pi']:
             self.unload_times.append(time)
         else:
             self.unload_time = time
+        '''
         contents = self.contents
         self.contents = 0
         return(
+            self.id,
             {
             'amount':contents,
             'jb_color':self.jb_color,

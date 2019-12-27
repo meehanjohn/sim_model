@@ -46,9 +46,11 @@ class storage_cell:
         queue_kwargs_list = queue.to_dict('records')
 
         if len(queue_kwargs_list) <= len(self.empty_drums):
+            drum_ids = []
             for queue_kwargs in queue_kwargs_list:
                 drum = self.empty_drums[0]
-                drum.load(time=time, **queue_kwargs)
+                drum_ids.append(drum.load(time=time, **queue_kwargs))
+            return(drum_ids)
         else:
             print('Not enough drums')
 

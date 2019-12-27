@@ -74,7 +74,7 @@ class machine:
             filename = 'files/pfo_rate.csv'
             self.rate = random_rate(filename, self.facility, **kwargs)
 
-        elif self.type == 'packaging':
+        elif (self.type == 'bagging_machine') | (self.type=='boxing_machine'):
             filename = 'files/packaging.csv'
             self.rate = random_rate(filename, self.facility, **kwargs)
 
@@ -119,7 +119,7 @@ class machine:
         )
         process_time = amount/rate
         # Process time in hours
-        return(process_time)
+        return(self.id, process_time)
 
     def unload(self, amount):
         out = self.queue.copy()
@@ -129,4 +129,4 @@ class machine:
         self.queue.amount = self.queue.amount.apply(
             lambda x: max(0, x-amount)
         )
-        return(out)
+        return(self.id, out)
